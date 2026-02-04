@@ -1,54 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>For You ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #ffeef2; text-align: center; padding: 50px; }
-        .page { display: none; }
-        .active { display: block; }
-        h1 { color: #d63384; }
-        button { background-color: #ff4d6d; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 20px; cursor: pointer; margin: 10px; transition: 0.3s; }
-        button:hover { background-color: #c9184a; transform: scale(1.1); }
-        .gift-container { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
-        .gift-box { width: 100px; height: 100px; background: #ff758f; line-height: 100px; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; }
+        :root {
+            --primary-pink: #ff85a1;
+            --secondary-pink: #fbb1bd;
+            --dark-pink: #ff4d6d;
+            --bg-color: #ffeef2;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Floating Hearts Background */
+        .heart {
+            position: absolute;
+            color: rgba(255, 77, 109, 0.3);
+            font-size: 20px;
+            animation: float 5s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .page { display: none; transition: opacity 0.5s ease; }
+        .active { display: block; opacity: 1; }
+
+        h1 { color: var(--dark-pink); font-size: 28px; }
+        p { color: #555; line-height: 1.6; }
+
+        .btn-group { margin-top: 30px; }
+
+        button {
+            background-color: var(--dark-pink);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        button:hover { transform: scale(1.1); background-color: #c9184a; }
+
+        #noButton { background-color: #999; }
+
+        /* Gift Grid */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gift-box {
+            background: var(--secondary-pink);
+            padding: 20px 10px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .gift-box:hover { background: var(--dark-pink); transform: translateY(-5px); }
+
+        .img-main { width: 200px; border-radius: 20px; margin: 20px 0; }
     </style>
 </head>
 <body>
 
-    <div id="page1" class="page active">
-        <h1>Will you be my Valentine? 🌹</h1>
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp4dm95Z3hndzZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3Jm1wPTY/Lp71UqhcHZiW4/giphy.gif" width="200">
-        <br>
-        <button onclick="nextPage('page2')">YES!</button>
-        <button id="noButton" onmouseover="moveButton()">No</button>
-    </div>
+    <div class="container">
+        <div id="page1" class="page active">
+            <h1>Hey, Shaya! <br> Will you be my Valentine? 🌹</h1>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp4dm95Z3hndzZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3Jm1wPTY/Lp71UqhcHZiW4/giphy.gif" class="img-main">
+            <div class="btn-group">
+                <button onclick="handleYes()">YES! 🥰</button>
+                <button id="noButton" onmouseover="moveButton()">No 😢</button>
+            </div>
+        </div>
 
-    <div id="page2" class="page">
-        <h1>Yay! I knew you'd say yes! 🥰</h1>
-        <p>Pick a gift box below:</p>
-        <div class="gift-container">
-            <div class="gift-box" onclick="nextPage('gift1')">Gift 1</div>
-            <div class="gift-box" onclick="nextPage('gift2')">Gift 2</div>
+        <div id="page2" class="page">
+            <h1>YAY! ❤️🎉</h1>
+            <p>I knew you'd say yes! I have a few surprises for you...</p>
+            <div class="gift-grid">
+                <div class="gift-box" onclick="showPage('gift1')">Gift 1</div>
+                <div class="gift-box" onclick="showPage('gift2')">Gift 2</div>
+                <div class="gift-box" onclick="showPage('gift3')">Gift 3</div>
+            </div>
+        </div>
+
+        <div id="gift1" class="page">
+            <h2>For You 💐</h2>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXByNXhndzZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3Jm1wPTY/X69UatshW7C464Tq2S/giphy.gif" class="img-main">
+            <p>You deserve all the flowers in the world.</p>
+            <button onclick="showPage('page2')">Back</button>
+        </div>
+
+        <div id="gift2" class="page">
+            <h2>A Note ✍️</h2>
+            <p style="text-align: left; font-style: italic;">
+                "To the most beautiful person I know, you make every single day better just by being in it. Thank you for being you."
+            </p>
+            <button onclick="showPage('page2')">Back</button>
+        </div>
+
+        <div id="gift3" class="page">
+            <h2>Our Song 🎵</h2>
+            <p>Scan this to hear something special!</p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://open.spotify.com/playlist/37i9dQZF1DX7rOY2tFIXqx" class="img-main">
+            <br>
+            <button onclick="showPage('page2')">Back</button>
         </div>
     </div>
 
-    <div id="gift1" class="page">
-        <h1>Gift #1: A Movie Date! 🍿</h1>
-        <p>We're going to see whatever you want!</p>
-        <button onclick="nextPage('page2')">Back</button>
-    </div>
-
-    <div id="gift2" class="page">
-        <h1>Gift #2: Coffee & Flowers ☕🌷</h1>
-        <button onclick="nextPage('page2')">Back</button>
-    </div>
-
     <script>
-        function nextPage(pageId) {
-            // Hide all pages
+        // Create floating background hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 300);
+
+        function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            // Show the selected page
-            document.getElementById(pageId).classList.add('active');
+            document.getElementById(id).classList.add('active');
+        }
+
+        function handleYes() {
+            // Confetti Blast!
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff4d6d', '#ff85a1', '#fbb1bd']
+            });
+            setTimeout(() => showPage('page2'), 500);
         }
 
         function moveButton() {
